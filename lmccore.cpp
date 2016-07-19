@@ -66,6 +66,10 @@ void readCamParam(cv::Mat &cam, cv::Mat &dist) {
   ifstream ifs;
   char buf[1024];
   ifs.open(KCameraParameterFileName, ifstream::in);
+  if (!ifs) {
+    cerr << "Can't open camera parameter file\n";
+    exit(-1);
+  }
   for (int row = 0; !ifs.eof();) {
     ifs.getline(buf, 1024);
     char *ptr = skipWhiteSpace(buf);
@@ -161,7 +165,6 @@ int main(int argc, char *argv[]) {
   // 4 頂点のスクリーン座標読み込み
   double tlX, tlY, trX, trY, blX, blY, brX, brY;
   cin >> tlX >> tlY >> trX >> trY >> blX >> blY >> brX >> brY;
-
   imgPoints[0].x = tlX;
   imgPoints[0].y = tlY;
   imgPoints[1].x = trX;
