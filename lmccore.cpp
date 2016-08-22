@@ -176,12 +176,13 @@ int main(int argc, char *argv[]) {
 
   
   parseLMC(cin, qrPos, objPoints, rotOrder, rotAngle);
-  cv::Mat rvec, tvec, rmat, camPos, camDir;
+  cv::Mat rvec, tvec, rmat, camPos, camDir, rmatTr;
   cv::Mat unitVector = (cv::Mat_<double>(3, 1) << 0, 0, 1);
   solvePnP(objPoints, imgPoints, camMat, distCoeffs, rvec, tvec);
   Rodrigues(rvec, rmat);
-  camPos = rmat * (-tvec);
-  camDir = rmat * unitVector;
+  cv::transpose(rmat, rmatTr);
+  camPos = rmatTr * (-tvec);
+  camDir = rmatTr * unitVector;
   // {QR} -> {W} 座標変換
   YagCQuaternion q(1, camPos.at<double>(0), camPos.at<double>(1), camPos.at<double>(2));
   YagCQuaternion q2(1, camDir.at<double>(0), camDir.at<double>(1), camDir.at<double>(2));
