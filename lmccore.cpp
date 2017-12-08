@@ -187,7 +187,12 @@ int main(int argc, char *argv[]) {
   YagCQuaternion q(1, camPos.at<double>(0), camPos.at<double>(1), camPos.at<double>(2));
   YagCQuaternion q2(1, camDir.at<double>(0), camDir.at<double>(1), camDir.at<double>(2));
   YagCQuaternion q3(1, 0, 0, 0);
-
+  YagCQuaternion qq2w(1, 0, 0, 0);  // {Q}->{W} 変換
+  YagCQuaternion q4
+    = YagCQuaternion::fromRMat(rmat.at<double>(0, 0), rmat.at<double>(0, 1), rmat.at<double>(0, 2),
+			       rmat.at<double>(1, 0), rmat.at<double>(1, 1), rmat.at<double>(1, 2),
+			       rmat.at<double>(2, 0), rmat.at<double>(2, 1), rmat.at<double>(2, 2)
+			       );
   for (int i = 0; i < 3; i++) {
     YagCQuaternion qtmp;
     switch (rotOrder[i]) {
@@ -201,13 +206,15 @@ int main(int argc, char *argv[]) {
       qtmp = qz(rotAngle[i] * M_PI / 180.0);
       break;
     }
-    q = qtmp * q * qtmp.conj();
-    q2 = qtmp * q2 * qtmp.conj();
-    q3 = qtmp * q3;
+    qq2w = qtmp * qq2w;
   }
+  YagCQuaternion qq2wconj = qq2w.conj();
+  YagCQuaternion wCamAttitude = qq2w * (q4.conj());
+  q = qq2w * q * qq2wconj;
+  q2 = qq2w * q2 * qq2wconj;
   cout << qrPos.x + q.x << " "
        << qrPos.y + q.y << " "
        << qrPos.z + q.z << endl;
-  cout << q2.x << " " << q2.y << " " << q2.z << endl;
+  cout << wCamAttitude.w << " " << wCamAttitude.x << " " << wCamAttitude.y << " " << wCamAttitude.z << endl;
   return 0;
 }
