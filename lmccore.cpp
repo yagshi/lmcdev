@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
   YagCQuaternion q2(1, camDir.at<double>(0), camDir.at<double>(1), camDir.at<double>(2));
   YagCQuaternion q3(1, 0, 0, 0);
   YagCQuaternion qq2w(1, 0, 0, 0);  // {Q}->{W} 変換
-  YagCQuaternion q4
+  YagCQuaternion q4                 // {Q} -> {cam}
     = YagCQuaternion::fromRMat(rmat.at<double>(0, 0), rmat.at<double>(0, 1), rmat.at<double>(0, 2),
 			       rmat.at<double>(1, 0), rmat.at<double>(1, 1), rmat.at<double>(1, 2),
 			       rmat.at<double>(2, 0), rmat.at<double>(2, 1), rmat.at<double>(2, 2)
